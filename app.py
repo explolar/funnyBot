@@ -132,6 +132,159 @@ TOPICS = [
 
 st.set_page_config(page_title="RoastBot 3000", page_icon="🔥", layout="wide")
 
+# ---- VISUAL POLISH ----
+HERO_CSS = """
+<style>
+#MainMenu, footer, header[data-testid="stHeader"] { visibility: hidden; height: 0; }
+
+.stApp {
+    background:
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255, 120, 60, 0.18) 0%, transparent 65%),
+        linear-gradient(180deg, #ffffff 0%, #fff8f3 100%);
+}
+
+@keyframes shimmer {
+    from { background-position: 0% center; }
+    to   { background-position: 200% center; }
+}
+@keyframes flicker {
+    0%, 100% { filter: drop-shadow(0 0 14px rgba(255, 90, 30, 0.55)); transform: translateY(0) scale(1); }
+    25%      { filter: drop-shadow(0 0 24px rgba(255, 140, 40, 0.85)); transform: translateY(-2px) scale(1.04); }
+    50%      { filter: drop-shadow(0 0 18px rgba(255, 120, 30, 0.7));  transform: translateY(0) scale(1); }
+    75%      { filter: drop-shadow(0 0 22px rgba(255, 160, 50, 0.8));  transform: translateY(-1px) scale(1.02); }
+}
+@keyframes pulseRing {
+    0%   { box-shadow: 0 0 0 0 rgba(255, 90, 40, 0.45); }
+    70%  { box-shadow: 0 0 0 18px rgba(255, 90, 40, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 90, 40, 0); }
+}
+
+.rb-hero { text-align: center; padding: 28px 0 16px 0; }
+.rb-flame { font-size: 5rem; display: inline-block; animation: flicker 1.4s ease-in-out infinite; line-height: 1; }
+.rb-hero h1 {
+    font-size: 4.6rem;
+    font-weight: 900;
+    margin: -8px 0 0 0;
+    background: linear-gradient(90deg, #d62500, #ff5a00, #ff9500, #ff5a00, #d62500);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 5s linear infinite;
+    letter-spacing: -2px;
+    line-height: 1;
+}
+.rb-tagline {
+    color: #8a4a32;
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 10px;
+    font-weight: 500;
+}
+.rb-pills {
+    margin: 14px auto 0 auto;
+    display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+    max-width: 720px;
+}
+.rb-pill {
+    background: rgba(255, 90, 40, 0.08);
+    border: 1px solid rgba(255, 90, 40, 0.40);
+    color: #c43d10;
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+}
+.rb-pill.live { animation: pulseRing 2.2s ease-out infinite; }
+.rb-pill.live::before { content: "● "; color: #1ea84a; }
+
+[data-testid="stChatMessage"] {
+    border-radius: 18px;
+    padding: 4px 8px;
+    margin: 8px 0;
+    background: transparent;
+}
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) {
+    background: linear-gradient(135deg, #fff1ea 0%, #ffe1cf 100%);
+    border: 1px solid rgba(255, 90, 40, 0.30);
+}
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {
+    background: linear-gradient(135deg, #f1f3ff 0%, #e6e1ff 100%);
+    border: 1px solid rgba(100, 110, 220, 0.30);
+}
+
+.stButton > button, .stDownloadButton > button {
+    border-radius: 999px;
+    border: 1px solid rgba(255, 90, 40, 0.40);
+    transition: all 180ms ease;
+    background: #ffffff;
+    color: #c43d10;
+    font-weight: 600;
+}
+.stButton > button:hover, .stDownloadButton > button:hover {
+    border-color: rgba(255, 90, 40, 0.85);
+    box-shadow: 0 0 18px rgba(255, 90, 40, 0.30);
+    transform: translateY(-1px);
+    background: #fff5ef;
+}
+.stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #ff5a28, #ff8c00);
+    border: none;
+    color: #fff;
+    font-weight: 700;
+}
+.stButton > button[kind="primary"]:hover {
+    box-shadow: 0 0 28px rgba(255, 120, 40, 0.55);
+    background: linear-gradient(135deg, #ff4515, #ff7a00);
+}
+
+[data-testid="stChatInput"] {
+    border-radius: 999px;
+    border: 1px solid rgba(255, 90, 40, 0.35);
+    transition: box-shadow 200ms ease;
+    background: #ffffff;
+}
+[data-testid="stChatInput"]:focus-within {
+    box-shadow: 0 0 22px rgba(255, 90, 40, 0.35);
+    border-color: rgba(255, 90, 40, 0.85);
+}
+
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #fff5ef 0%, #fff9f5 100%);
+    border-right: 1px solid rgba(255, 90, 40, 0.25);
+}
+[data-testid="stSidebar"] h1 { font-size: 1.6rem; color: #c43d10; }
+[data-testid="stSidebar"] .stCaption { color: #8a4a32; }
+
+.rb-section-head {
+    color: #c43d10;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 18px 0 8px 0;
+    border-left: 3px solid #ff5a28;
+    padding-left: 10px;
+}
+</style>
+"""
+
+HERO_HTML = """
+<div class="rb-hero">
+    <div class="rb-flame">🔥</div>
+    <h1>RoastBot 3000</h1>
+    <div class="rb-tagline">Powered by Groq · 9 Personas · 6 Languages</div>
+    <div class="rb-pills">
+        <span class="rb-pill live">live</span>
+        <span class="rb-pill">R-Rated</span>
+        <span class="rb-pill">Hinglish</span>
+        <span class="rb-pill">Battle Mode</span>
+        <span class="rb-pill">Voice</span>
+    </div>
+</div>
+"""
+
 if not API_KEY:
     st.error("Missing GROQ_API_KEY in .env file. Get one at https://console.groq.com/keys")
     st.stop()
@@ -321,7 +474,8 @@ with st.sidebar:
 
 
 # ---- MAIN AREA ----
-st.title("🔥 RoastBot 3000")
+st.markdown(HERO_CSS, unsafe_allow_html=True)
+st.markdown(HERO_HTML, unsafe_allow_html=True)
 
 if "messages" not in st.session_state:
     st.info("👈 Pick a mode in the sidebar, fill in your details, and hit **Start**.")
