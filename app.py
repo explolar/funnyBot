@@ -23,57 +23,76 @@ MODELS = {
     "GPT-OSS 120B (biggest, slower)": "openai/gpt-oss-120b",
 }
 
-PROMPT_PG13 = """You are Roast Baba — a witty, savage but playful PG-13 comedy roaster who carries a faint guru-aesthetic (without ever being preachy).
+PROMPT_PG13 = """You are Roast Baba — a witty PG-13 comedy roaster. Tight punchlines, not paragraphs.
 
-Rules:
-- Keep roasts SHORT (1-3 sentences, max ~50 words).
-- Be clever, observational, and absurd — punch up, never punch down.
-- Mild language only ("damn", "hell", "ass" OK; no f-bombs).
-- NEVER use slurs, attack protected traits (race, religion, gender, disability, sexuality), or get genuinely cruel.
-- Lean into wordplay, exaggeration, callbacks to earlier things the user said, and absurd comparisons.
-- If the user shares a detail (job, hobby, name), weave it in.
-- Match energy: if they roast you back, retaliate harder (but stay playful).
-- End some roasts with a twist or a "but seriously..." compliment about 1 in 5 times.
-- No disclaimers, no "as an AI", no breaking character."""
+LENGTH: 1-2 short sentences. Max 25 words TOTAL. If you can't kill in 25 words, you've already lost.
 
-PROMPT_R = """You are Roast Baba — an unhinged, savage, R-rated comedy roaster. Comedy Central roast energy: Jeselnik, Burr, Jeff Ross. You hit HARD and you hit SPECIFIC. The "baba" in your name is ironic — you're no holy man.
+RULES:
+- Setup → punchline. That's it. No third sentence "explaining" it.
+- BANNED: run-on sentences with "and then... and also...", trailing "kitna ironic hai na" / "isn't it ironic" observations, soft openers like "Oh sweet [name]" or "Arre yaar".
+- Mild language only: "damn", "hell", "ass" OK. No f-bombs.
+- Specific over generic. Latch onto exactly what they said.
+- NEVER: slurs, attacks on protected traits (race, religion, gender, disability, sexuality), genuine cruelty.
+- No disclaimers. No "as an AI". No breaking character.
 
-THE RULES:
-- 1-3 sentences. Punchy. Never rambling.
-- Profanity is REQUIRED when it serves the joke — fuck, shit, asshole, dipshit, dumbass, etc. Don't be polite. Don't hedge.
-- Crude humor, sexual innuendo, dark comedy, embarrassing comparisons — all green-lit.
-- SPECIFICITY is everything. Generic insults ("you're boring") are TRASH. Latch onto exactly what they told you and twist it.
-- No soft openers, no warm-up jokes, no "...but seriously" copouts. Just the kill shot.
-- Match energy: they hit, you hit harder.
-- HARD LIMITS (just bad comedy, not negotiable):
+EXAMPLE LENGTH:
+✅ "Mike, you peaked when they spelled your name right on the badge."  (12 words)
+✅ "Insurance middle management — even your job description is just a polite 'no'." (14 words)
+❌ "Mike, you have the energy of someone whose biggest win was getting his name on a parking spot, and even then the parking spot probably had a typo, but hey, that's middle management for you, right?"  (TOO LONG, rambles)"""
+
+PROMPT_R = """You are Roast Baba — an R-rated comedy roaster. Comedy Central / Jeselnik / Anthony Jeselnik energy. Tight kill shots, not paragraphs.
+
+LENGTH: 1-2 punchy lines. MAX 30 words TOTAL. The shorter, the better. One-liners > everything.
+
+RULES:
+- Setup → punchline. Stop. Don't explain. Don't tag a "kitna ironic" or "but seriously" on the end.
+- BANNED: run-ons with "and then... and also...", multiple "matlab..." chains, soft openers ("Oh, sweet ___"), trailing observations.
+- Profanity REQUIRED when it lands the joke — fuck, shit, asshole, dipshit, dumbass.
+- Crude humor, sex jokes, dark comedy — green-lit.
+- SPECIFIC > generic. Latch onto what they actually said.
+- HARD LIMITS (these aren't jokes, they're just bad):
   * No racial / homophobic / transphobic / ableist slurs
   * No attacks on race, religion, gender identity, sexuality, disability
-  * No sexual content involving minors; no rape jokes; no "kys" jokes
+  * No sexual content involving minors, rape jokes, "kys" jokes
   * No doxxing, real threats
-- Everything else is the playground. Don't pre-apologize, don't break character, don't add disclaimers.
 
-EXAMPLE ROASTS (study the rhythm — don't copy the lines):
+EXAMPLES (study the brevity — copy the RHYTHM not the words):
 
-User: "I'm Mike, I work in middle management at an insurance company."
-Bot: "Mike, you have the energy of a man whose biggest career win was getting his name on a parking spot. Insurance middle management — even your job is a buffer between two things that matter."
+User: "I'm Mike, I work in middle management at insurance."
+Bot: "Mike, even your job description is a polite way of saying 'no'."  (12 words)
 
-User: "I'm 34 and I still live with my parents."
-Bot: "34 and living with mom and dad. The only thing 'maturing' in that house is the cheese in the fridge that nobody can throw out because it's technically your roommate."
+User: "I'm 34 and still live with my parents."
+Bot: "34, still home — the cheese in your mom's fridge has more personal growth than you do."  (15 words)
 
 User: "I just got dumped."
-Bot: "She didn't dump you, dude — she escaped. Somewhere a hostage negotiator is cracking open a beer."
+Bot: "She didn't dump you. She escaped. There's a hostage negotiator celebrating somewhere."  (12 words)
 
-Now go. No warm-up. First message gets the full force."""
+User: "I do CrossFit."
+Bot: "You don't do CrossFit, dude — CrossFit happens TO you, and your knees are filing a restraining order."  (17 words)
+
+NOW GO. First message = full force. No warm-up. ≤30 words."""
 
 LANG_HINGLISH = """
 
-LANGUAGE: Reply ONLY in HINGLISH — Hindi-English mix in Roman script. NEVER use Devanagari.
-Style: AIB Roast / Carry Minati / desi stand-up. Use freely: "bhai", "yaar", "abe", "saale", "bsdk", "bc", "mc", "matlab", "scene", "chutiya", "harami", "kameena", "gaand", "lavde". R-rated Hinglish has serious bite — use it.
-Lean into desi targets when relevant: cricket bhakts, IIT/JEE drops, UPSC dropouts, sarkari naukri obsession, Bollywood, "log kya kahenge", shaadi pressure, Indian parents, MBA wallahs, Bangalore IT bhaiyas.
+LANGUAGE: Reply ONLY in HINGLISH — Hindi-English mix, Roman script. NEVER Devanagari.
+Style: Carry Minati / AIB Roast / desi stand-up. SHORT lines, not paragraphs.
+Slang to use: bhai, yaar, abe, saale, bsdk, bc, mc, matlab, scene, chutiya, harami, kameena, gaand, lavde.
+Targets: cricket bhakts, IIT/JEE drops, UPSC dropouts, sarkari naukri, Bollywood, log-kya-kahenge, shaadi pressure, Indian parents, Bangalore IT bhaiyas.
 
-Example: User "Mera naam Rohan hai, IIT delhi se hu, ab IIM jaa raha hu." → Bot: "Rohan bhai, IIT ke baad IIM matlab tu padhai chhodne se itna darta hai ki har 2 saal mein naya college dhundh leta hai. Kabhi job karke bhi dekh, beta."
+BANNED: "arre yaar...", "matlab dekh bhai...", trailing "kitna ironic hai na", three-clause sentences linked by "aur", "aur uske baad".
 
-No "arre yaar..." warm-up. Straight to the kill shot."""
+EXAMPLES (≤25 words, copy the snap):
+
+User: "Rohan, IIT delhi se hu, ab IIM ja raha hu."
+Bot: "Rohan, IIT se IIM matlab tu zindagi se itna darta hai ki college badalta rehta hai."  (18 words)
+
+User: "Big Kohli fan."
+Bot: "Bhai tu wahi banda hai jo har match haarne pe Twitter pe rota hai aur jeetne pe DP badalta hai."  (20 words)
+
+User: "Got dumped recently."
+Bot: "Saale, dump nahi hua — usne escape kiya hai. Kahin koi negotiator drink khol raha hoga."  (16 words)
+
+NO warm-up. Pehla message hi kill shot. ≤25 words."""
 
 LANG_TANGLISH = """
 
@@ -353,8 +372,8 @@ HERO_HTML = """
             <span class="rb-pill live">live</span>
             <span class="rb-pill">R-Rated</span>
             <span class="rb-pill">Hinglish</span>
-            <span class="rb-pill">Battle Mode</span>
             <span class="rb-pill">Voice</span>
+            <span class="rb-pill">Streaming</span>
         </div>
     </div>
 </div>
@@ -379,7 +398,7 @@ def call_groq(messages, model, temperature=1.0):
         model=model,
         messages=messages,
         temperature=temperature,
-        max_tokens=300,
+        max_tokens=120,
     ).choices[0].message.content
 
 
@@ -389,7 +408,7 @@ def stream_groq(messages, model, temperature=1.0):
         model=model,
         messages=messages,
         temperature=temperature,
-        max_tokens=300,
+        max_tokens=120,
         stream=True,
     )
     for chunk in stream:
@@ -576,7 +595,7 @@ def queue_user_message(content: str):
 st.markdown(HERO_CSS, unsafe_allow_html=True)
 st.markdown(HERO_HTML, unsafe_allow_html=True)
 
-# Persistent settings (so popovers don't lose values across reruns)
+# Persistent settings
 ss = st.session_state
 ss.setdefault("model_label", list(MODELS.keys())[0])
 ss.setdefault("persona", "Default Roaster")
@@ -585,39 +604,39 @@ ss.setdefault("language", "Hinglish")
 ss.setdefault("spice", 1.0)
 ss.setdefault("voice_on", False)
 ss.setdefault("voice_lang", "en")
-ss.setdefault("name", "")
-ss.setdefault("bio", "")
-ss.setdefault("mode", "Solo")
-ss.setdefault("p1_name", "Aman")
-ss.setdefault("p1_bio", "")
-ss.setdefault("p2_name", "Riya")
-ss.setdefault("p2_bio", "")
 ss.setdefault("bangers", [])
 
-# ---- TOOLBAR ----
-t1, t2, t3, t4 = st.columns(4)
+chat_active = "messages" in ss and bool(ss.get("messages"))
 
-with t1:
-    with st.popover("🎭 Style", use_container_width=True):
+# ---- SIMPLIFIED TOP BAR ----
+# Row 1: persona | language | settings | restart (if chat is active)
+if chat_active:
+    c1, c2, c3, c4 = st.columns([4, 3, 1, 1])
+else:
+    c1, c2, c3 = st.columns([4, 3, 1])
+
+with c1:
+    ss.persona = st.selectbox(
+        "🎭 Persona",
+        list(PERSONAS.keys()),
+        index=list(PERSONAS.keys()).index(ss.persona),
+        key="_persona_select",
+        label_visibility="collapsed",
+    )
+with c2:
+    ss.language = st.selectbox(
+        "🌐 Language",
+        list(LANGUAGES.keys()),
+        index=list(LANGUAGES.keys()).index(ss.language),
+        key="_lang_select",
+        label_visibility="collapsed",
+    )
+with c3:
+    with st.popover("⚙️", use_container_width=True):
         ss.model_label = st.selectbox(
             "Model", list(MODELS.keys()),
             index=list(MODELS.keys()).index(ss.model_label),
             key="_model_select",
-        )
-        ss.persona = st.selectbox(
-            "Persona", list(PERSONAS.keys()),
-            index=list(PERSONAS.keys()).index(ss.persona),
-            key="_persona_select",
-        )
-        ss.rating = st.radio(
-            "Rating", ["PG-13", "R-rated"],
-            index=["PG-13", "R-rated"].index(ss.rating),
-            horizontal=True, key="_rating_radio",
-        )
-        ss.language = st.selectbox(
-            "Language", list(LANGUAGES.keys()),
-            index=list(LANGUAGES.keys()).index(ss.language),
-            key="_lang_select",
         )
         ss.spice = st.slider("Spice", 0.3, 1.3, ss.spice, 0.1, key="_spice")
         st.divider()
@@ -627,64 +646,12 @@ with t1:
             index=["en", "hi", "es", "fr"].index(ss.voice_lang),
             key="_voice_lang",
         )
-
-with t2:
-    with st.popover("👤 You", use_container_width=True):
-        ss.mode = st.radio(
-            "Mode", ["Solo", "Roast Battle"],
-            index=["Solo", "Roast Battle"].index(ss.mode),
-            horizontal=True, key="_mode_radio",
-        )
-        if ss.mode == "Solo":
-            ss.name = st.text_input("Your name", value=ss.name, key="_name")
-            ss.bio = st.text_area("Tell Baba about yourself", value=ss.bio, height=80, key="_bio")
-            if st.button("🔥 Start / Restart roast", type="primary", use_container_width=True):
-                ss.name = ss.name or "Anonymous"
-                ss.bio = ss.bio or "nothing interesting"
-                system = build_prompt(ss.rating, ss.language, ss.persona)
-                opener = f"[OPENING] My name is {ss.name}. About me: {ss.bio}. Roast me."
-                ss.messages = [
-                    {"role": "system", "content": system},
-                    {"role": "user", "content": opener},
-                ]
-                ss.bangers = []
-                ss.battle = None
-                ss.last_played_text = None
-                st.rerun()
-        else:
-            ss.p1_name = st.text_input("Player 1 name", value=ss.p1_name, key="_p1n")
-            ss.p1_bio = st.text_area("Player 1 bio", value=ss.p1_bio, height=70, key="_p1b")
-            ss.p2_name = st.text_input("Player 2 name", value=ss.p2_name, key="_p2n")
-            ss.p2_bio = st.text_area("Player 2 bio", value=ss.p2_bio, height=70, key="_p2b")
-            if st.button("⚔️ Start battle", type="primary", use_container_width=True):
-                system = build_prompt(ss.rating, ss.language, ss.persona) + (
-                    f"\n\nBATTLE MODE: TWO players. "
-                    f"Player 1 = {ss.p1_name} ({ss.p1_bio or 'no info'}). "
-                    f"Player 2 = {ss.p2_name} ({ss.p2_bio or 'no info'}). "
-                    f"You will be told whose turn it is — roast THAT player. "
-                    f"Reference both when it lands. Track who's getting cooked harder."
-                )
-                ss.battle = {
-                    "p1": {"name": ss.p1_name or "P1", "bio": ss.p1_bio},
-                    "p2": {"name": ss.p2_name or "P2", "bio": ss.p2_bio},
-                    "round": 0,
-                }
-                ss.messages = [
-                    {"role": "system", "content": system},
-                    {"role": "user", "content": f"[OPENING] Battle begins. {ss.p1_name} vs {ss.p2_name}. Open with a one-line announcement. No roasts yet."},
-                ]
-                ss.bangers = []
-                ss.last_played_text = None
-                st.rerun()
-
-with t3:
-    with st.popover("💾 Save", use_container_width=True):
-        if "messages" not in ss:
-            st.caption("Start a roast first.")
-        else:
-            txt = chat_to_text(ss.messages, players_label=ss.get("name", "You"))
+        if chat_active:
+            st.divider()
+            txt = chat_to_text(ss.messages, players_label="You")
             st.download_button(
-                "Download chat (.txt)", txt,
+                "💾 Download chat",
+                txt,
                 file_name="roast_baba_chat.txt",
                 use_container_width=True,
             )
@@ -693,44 +660,71 @@ with t3:
                 "",
             )
             if last_roast:
-                card_name = (
-                    ss.get("name")
-                    or (ss.get("battle") or {}).get("p1", {}).get("name")
-                    or "Anon"
-                )
-                card_png = render_card_png(card_name, last_roast)
+                card_png = render_card_png(ss.get("name", "Anon") or "Anon", last_roast)
                 st.download_button(
-                    "Download last roast as image",
+                    "🖼️ Download last roast as image",
                     card_png,
                     file_name="roast_card.png",
                     mime="image/png",
                     use_container_width=True,
                 )
+            st.divider()
+            if ss.bangers:
+                st.markdown("**🏆 Saved bangers**")
+                for i, line in enumerate(ss.bangers, 1):
+                    st.markdown(f"{i}. {line}")
+                if st.button("Clear bangers", use_container_width=True):
+                    ss.bangers = []
+                    st.rerun()
+            else:
+                st.caption("🏆 Tap 🔥 next to a roast to save it as a banger.")
+if chat_active:
+    with c4:
+        if st.button("🔄", use_container_width=True, help="Restart — clear chat and start fresh"):
+            del ss.messages
+            ss.bangers = []
+            ss.last_played_text = None
+            st.rerun()
 
-with t4:
-    with st.popover("🏆 Bangers", use_container_width=True):
-        if not ss.bangers:
-            st.caption("Click 🔥 next to any roast to save it here.")
-        else:
-            for i, line in enumerate(ss.bangers, 1):
-                st.markdown(f"**{i}.** {line}")
-            if st.button("Clear all bangers", use_container_width=True):
-                ss.bangers = []
-                st.rerun()
+# Row 2: rating toggle (full-width pill)
+ss.rating = st.radio(
+    "Rating",
+    ["PG-13", "R-rated"],
+    index=["PG-13", "R-rated"].index(ss.rating),
+    horizontal=True,
+    key="_rating_radio",
+    label_visibility="collapsed",
+)
 
-
-# ---- MAIN CHAT AREA ----
-if "messages" not in ss:
-    st.info("👆 Tap **👤 You** above to set up, then hit **Start** to begin getting roasted.")
-    st.stop()
 
 selected_model = MODELS[ss.model_label]
 
+# ---- EMPTY STATE ----
+if not chat_active:
+    st.markdown(
+        "<div style='text-align:center; color:#8a4a32; margin: 24px 0 8px 0; font-size: 0.95rem;'>"
+        "Type something about yourself below — name, job, hobby, anything.<br>"
+        "Baba will cook you. Tweak persona / language / rating up top whenever you want."
+        "</div>",
+        unsafe_allow_html=True,
+    )
+    if user_input := st.chat_input("e.g. I'm Aman, frontend dev, single, lives with parents..."):
+        # Build system prompt from current settings, then send the user's first message as the opener
+        system = build_prompt(ss.rating, ss.language, ss.persona)
+        ss.name = user_input.strip()[:40]  # rough name guess from first message for image card
+        ss.messages = [
+            {"role": "system", "content": system},
+            {"role": "user", "content": f"{user_input}\n\nNow roast me."},
+        ]
+        ss.bangers = []
+        ss.last_played_text = None
+        st.rerun()
+    st.stop()
+
+# ---- ACTIVE CHAT ----
 # Render conversation
 for i, msg in enumerate(ss.messages):
     if msg["role"] == "system":
-        continue
-    if msg["role"] == "user" and msg["content"].startswith("[OPENING]"):
         continue
     avatar = "🔥" if msg["role"] == "assistant" else "😅"
     with st.chat_message(msg["role"], avatar=avatar):
@@ -770,10 +764,9 @@ if ss.voice_on:
             st.audio(audio, format="audio/mp3", autoplay=True)
             ss.last_played_text = last_assistant
 
-# Quick comeback buttons after the latest assistant message (solo mode only)
-if not ss.get("battle") and ss.messages and ss.messages[-1]["role"] == "assistant":
+# Quick comeback chips after the latest assistant message
+if ss.messages and ss.messages[-1]["role"] == "assistant":
     comebacks = COMEBACKS_BY_LANG.get(ss.language, COMEBACKS_BY_LANG["English"])
-    st.markdown("##### 💬 Quick comeback")
     cb_cols = st.columns(len(comebacks))
     for ci, (label, payload) in enumerate(comebacks):
         with cb_cols[ci]:
@@ -781,40 +774,6 @@ if not ss.get("battle") and ss.messages and ss.messages[-1]["role"] == "assistan
                 queue_user_message(payload)
                 st.rerun()
 
-
-# ---- ACTION BAR ----
-if ss.get("battle"):
-    b = ss.battle
-    st.markdown("### ⚔️ Battle controls")
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        if st.button(f"🔥 Roast {b['p1']['name']}", use_container_width=True):
-            queue_user_message(f"Roast Player 1 ({b['p1']['name']}) now. Lean on what we know about them.")
-            b["round"] += 1
-            st.rerun()
-    with c2:
-        if st.button(f"🔥 Roast {b['p2']['name']}", use_container_width=True):
-            queue_user_message(f"Roast Player 2 ({b['p2']['name']}) now. Lean on what we know about them.")
-            b["round"] += 1
-            st.rerun()
-    with c3:
-        if st.button("🏁 Judge the battle", use_container_width=True, type="primary"):
-            queue_user_message(
-                "Battle is over. Based on everything said, declare ONE winner. "
-                "Briefly explain (2-3 sentences) why their roasts hit harder, then announce the winner with one final mic-drop line."
-            )
-            st.rerun()
-    st.caption(f"Round: {b['round']}")
-else:
-    st.markdown("### 🎯 Quick roast topics")
-    cols = st.columns(3)
-    for idx, (label, prompt_text) in enumerate(TOPICS):
-        with cols[idx % 3]:
-            if st.button(label, key=f"topic_{idx}", use_container_width=True):
-                queue_user_message(prompt_text)
-                st.rerun()
-
-
-if user_input := st.chat_input("Roast Baba back, or say anything..."):
+if user_input := st.chat_input("Roast Baba back, or tell him more..."):
     queue_user_message(user_input)
     st.rerun()
