@@ -537,7 +537,7 @@ ss = st.session_state
 ss.setdefault("model_label", list(MODELS.keys())[0])
 ss.setdefault("persona", "Default Roaster")
 ss.setdefault("rating", "R-rated")
-ss.setdefault("language", "English")
+ss.setdefault("language", "Hinglish")
 ss.setdefault("spice", 1.0)
 ss.setdefault("voice_on", False)
 ss.setdefault("voice_lang", "en")
