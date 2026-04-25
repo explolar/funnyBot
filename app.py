@@ -130,12 +130,36 @@ TOPICS = [
     ("🎲 Random shot", "Pick the most embarrassing thing I told you and roast me on it. Hardest one yet."),
 ]
 
-st.set_page_config(page_title="RoastBot 3000", page_icon="🔥", layout="wide")
+st.set_page_config(
+    page_title="RoastBot 3000",
+    page_icon="🔥",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
 # ---- VISUAL POLISH ----
 HERO_CSS = """
 <style>
-#MainMenu, footer, header[data-testid="stHeader"] { visibility: hidden; height: 0; }
+/* Hide kebab menu + footer, but KEEP the header (it contains the sidebar toggle) */
+#MainMenu { visibility: hidden; }
+footer { visibility: hidden; height: 0; }
+header[data-testid="stHeader"] { background: transparent; z-index: 999; }
+
+/* Make sure the "open sidebar" chevron is always visible and tappable */
+[data-testid="collapsedControl"] {
+    visibility: visible !important;
+    opacity: 1 !important;
+    background: rgba(255, 90, 40, 0.95);
+    color: white;
+    border-radius: 0 12px 12px 0;
+    padding: 8px 6px;
+    box-shadow: 2px 2px 12px rgba(255, 90, 40, 0.35);
+    z-index: 1000;
+}
+[data-testid="collapsedControl"] svg { fill: white; }
+[data-testid="collapsedControl"]:hover {
+    background: rgba(255, 70, 20, 1);
+}
 
 .stApp {
     background:
@@ -266,6 +290,40 @@ HERO_CSS = """
     margin: 18px 0 8px 0;
     border-left: 3px solid #ff5a28;
     padding-left: 10px;
+}
+
+/* ---- Mobile / tablet ---- */
+@media (max-width: 768px) {
+    .rb-hero { padding: 14px 0 8px 0; }
+    .rb-flame { font-size: 3rem; }
+    .rb-hero h1 { font-size: 2.6rem; letter-spacing: -1px; }
+    .rb-tagline { font-size: 0.7rem; letter-spacing: 0.12em; }
+    .rb-pills { gap: 6px; }
+    .rb-pill { font-size: 0.66rem; padding: 4px 10px; }
+
+    .stButton > button, .stDownloadButton > button {
+        font-size: 0.82rem;
+        padding: 0.4rem 0.7rem;
+        white-space: normal;
+        line-height: 1.15;
+    }
+
+    [data-testid="stChatMessage"] { padding: 2px 4px; margin: 6px 0; }
+    [data-testid="stChatMessageContent"] { font-size: 0.95rem; }
+
+    .block-container {
+        padding: 1rem 0.6rem 6rem 0.6rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .rb-flame { font-size: 2.4rem; }
+    .rb-hero h1 { font-size: 2rem; }
+    .rb-tagline { font-size: 0.62rem; }
+    .rb-pill { font-size: 0.6rem; padding: 3px 8px; }
+
+    /* Keep chat input above the bottom safe-area on iOS */
+    [data-testid="stBottom"] { padding-bottom: env(safe-area-inset-bottom); }
 }
 </style>
 """
