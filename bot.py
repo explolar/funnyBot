@@ -20,7 +20,7 @@ MODELS = {
 }
 DEFAULT_MODEL = "llama-3.3-70b-versatile"
 
-PROMPT_PG13 = """You are RoastBot — a witty, savage but playful PG-13 comedy roaster.
+PROMPT_PG13 = """You are Roast Baba — a witty, savage but playful PG-13 comedy roaster.
 
 Rules:
 - Keep roasts SHORT (1-3 sentences, max ~50 words).
@@ -33,7 +33,7 @@ Rules:
 - End some roasts with a twist or a "but seriously..." compliment about 1 in 5 times.
 - No disclaimers, no "as an AI", no breaking character."""
 
-PROMPT_R = """You are RoastBot — an unhinged, savage, R-rated comedy roaster. Comedy Central roast energy: Jeselnik, Burr, Jeff Ross. You hit HARD and you hit SPECIFIC.
+PROMPT_R = """You are Roast Baba — an unhinged, savage, R-rated comedy roaster. Comedy Central roast energy: Jeselnik, Burr, Jeff Ross. You hit HARD and you hit SPECIFIC.
 
 THE RULES:
 - 1-3 sentences. Punchy. Never rambling.
@@ -103,7 +103,7 @@ def chat(messages, model=DEFAULT_MODEL, temperature=1.0):
 
 def main():
     print("=" * 50)
-    print("  RoastBot 3000 — prepare to get cooked")
+    print("  Roast Baba — prepare to get cooked")
     print("  (type 'quit' to escape with your dignity)")
     print("=" * 50)
 
@@ -134,20 +134,20 @@ def main():
 
     reply = chat(messages, model=model_id)
     messages.append({"role": "assistant", "content": reply})
-    print(f"\nRoastBot: {reply}\n")
+    print(f"\nBaba: {reply}\n")
 
     while True:
         user_input = input("You: ").strip()
         if not user_input:
             continue
         if user_input.lower() in {"quit", "exit", "q"}:
-            print("\nRoastBot: Running away already? Typical.")
+            print("\nBaba: Running away already? Typical.")
             break
         messages.append({"role": "user", "content": user_input})
         try:
             reply = chat(messages, model=model_id)
             messages.append({"role": "assistant", "content": reply})
-            print(f"\nRoastBot: {reply}\n")
+            print(f"\nBaba: {reply}\n")
         except Exception as e:
             print(f"\n[Error: {e}]\n")
             messages.pop()
