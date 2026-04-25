@@ -383,6 +383,55 @@ def call_groq(messages, model, temperature=1.0):
     ).choices[0].message.content
 
 
+def stream_groq(messages, model, temperature=1.0):
+    """Yields content chunks as they arrive from Groq. Used by st.write_stream."""
+    stream = client.chat.completions.create(
+        model=model,
+        messages=messages,
+        temperature=temperature,
+        max_tokens=300,
+        stream=True,
+    )
+    for chunk in stream:
+        delta = chunk.choices[0].delta.content
+        if delta:
+            yield delta
+
+
+COMEBACKS_BY_LANG = {
+    "English": [
+        ("🔥 Harder", "Bring it harder. That was weak."),
+        ("🎯 Again", "Roast me again. Different angle this time."),
+        ("💀 Finish me", "Now go for the kill. Worst thing about me, no mercy."),
+    ],
+    "Hinglish": [
+        ("🔥 Aur maar bhai", "Aur tez maar bhai, ye toh halka tha."),
+        ("🎯 Phir se", "Phir se roast kar, naya angle le."),
+        ("💀 Khatam kar", "Ab finishing move maar. Sabse bekaar cheez bata, koi mercy nahi."),
+    ],
+    "Tanglish": [
+        ("🔥 Innum strong-a", "Da, innum strong-a roast pannu, idhu light-a iruchi."),
+        ("🎯 Marupadi", "Marupadi roast pannu, vera angle-la."),
+        ("💀 Mudichite po", "Mass finishing-a podu da. Worst thing about me sollu, no mercy."),
+    ],
+    "Bhojpuri": [
+        ("🔥 Aur tez", "Aur tez maar ho, e to halka rahal."),
+        ("🎯 Pheri", "Pheri roast kar, naya tareeka se."),
+        ("💀 Khatam kar", "Ab finish kar de, sabse bekaar cheez bata."),
+    ],
+    "Spanish": [
+        ("🔥 Más fuerte", "Más fuerte, eso fue débil."),
+        ("🎯 Otra vez", "Otra vez, otro ángulo."),
+        ("💀 Acábame", "Ahora a matar. Lo peor de mí, sin piedad."),
+    ],
+    "French": [
+        ("🔥 Plus fort", "Plus fort, c'était faible."),
+        ("🎯 Encore", "Encore une fois, autre angle."),
+        ("💀 Achève-moi", "Achève-moi maintenant. Le pire de moi, sans pitié."),
+    ],
+}
+
+
 @st.cache_data(show_spinner=False)
 def tts_bytes(text: str, lang_code: str = "en") -> bytes:
     try:
@@ -518,14 +567,9 @@ def chat_to_text(messages, players_label="You") -> str:
     return "\n".join(lines)
 
 
-def send_user_message(content: str, model: str, temperature: float):
+def queue_user_message(content: str):
+    """Append user message; the streaming render loop will generate a reply on rerun."""
     st.session_state.messages.append({"role": "user", "content": content})
-    try:
-        reply = call_groq(st.session_state.messages, model, temperature)
-        st.session_state.messages.append({"role": "assistant", "content": reply})
-    except Exception as e:
-        st.error(f"Error: {e}")
-        st.session_state.messages.pop()
 
 
 # ---- HERO ----
@@ -603,11 +647,9 @@ with t2:
                     {"role": "system", "content": system},
                     {"role": "user", "content": opener},
                 ]
-                with st.spinner("Baba is loading insults..."):
-                    reply = call_groq(ss.messages, MODELS[ss.model_label], ss.spice)
-                ss.messages.append({"role": "assistant", "content": reply})
                 ss.bangers = []
                 ss.battle = None
+                ss.last_played_text = None
                 st.rerun()
         else:
             ss.p1_name = st.text_input("Player 1 name", value=ss.p1_name, key="_p1n")
@@ -631,10 +673,8 @@ with t2:
                     {"role": "system", "content": system},
                     {"role": "user", "content": f"[OPENING] Battle begins. {ss.p1_name} vs {ss.p2_name}. Open with a one-line announcement. No roasts yet."},
                 ]
-                with st.spinner("Loading the cooker..."):
-                    reply = call_groq(ss.messages, MODELS[ss.model_label], ss.spice)
-                ss.messages.append({"role": "assistant", "content": reply})
                 ss.bangers = []
+                ss.last_played_text = None
                 st.rerun()
 
 with t3:
@@ -703,6 +743,20 @@ for i, msg in enumerate(ss.messages):
                         ss.bangers.append(msg["content"])
                         st.toast("Saved to bangers", icon="🔥")
 
+# Stream a response if the conversation ends on a user message
+if ss.messages and ss.messages[-1]["role"] == "user":
+    with st.chat_message("assistant", avatar="🔥"):
+        try:
+            full = st.write_stream(
+                stream_groq(ss.messages, selected_model, ss.spice)
+            )
+        except Exception as e:
+            st.error(f"Error: {e}")
+            ss.messages.pop()
+            st.stop()
+    ss.messages.append({"role": "assistant", "content": full})
+    st.rerun()
+
 # Auto-play TTS for the latest assistant message
 if ss.voice_on:
     last_assistant = next(
@@ -716,6 +770,17 @@ if ss.voice_on:
             st.audio(audio, format="audio/mp3", autoplay=True)
             ss.last_played_text = last_assistant
 
+# Quick comeback buttons after the latest assistant message (solo mode only)
+if not ss.get("battle") and ss.messages and ss.messages[-1]["role"] == "assistant":
+    comebacks = COMEBACKS_BY_LANG.get(ss.language, COMEBACKS_BY_LANG["English"])
+    st.markdown("##### 💬 Quick comeback")
+    cb_cols = st.columns(len(comebacks))
+    for ci, (label, payload) in enumerate(comebacks):
+        with cb_cols[ci]:
+            if st.button(label, key=f"cb_{len(ss.messages)}_{ci}", use_container_width=True):
+                queue_user_message(payload)
+                st.rerun()
+
 
 # ---- ACTION BAR ----
 if ss.get("battle"):
@@ -724,26 +789,19 @@ if ss.get("battle"):
     c1, c2, c3 = st.columns(3)
     with c1:
         if st.button(f"🔥 Roast {b['p1']['name']}", use_container_width=True):
-            send_user_message(
-                f"Roast Player 1 ({b['p1']['name']}) now. Lean on what we know about them.",
-                selected_model, ss.spice,
-            )
+            queue_user_message(f"Roast Player 1 ({b['p1']['name']}) now. Lean on what we know about them.")
             b["round"] += 1
             st.rerun()
     with c2:
         if st.button(f"🔥 Roast {b['p2']['name']}", use_container_width=True):
-            send_user_message(
-                f"Roast Player 2 ({b['p2']['name']}) now. Lean on what we know about them.",
-                selected_model, ss.spice,
-            )
+            queue_user_message(f"Roast Player 2 ({b['p2']['name']}) now. Lean on what we know about them.")
             b["round"] += 1
             st.rerun()
     with c3:
         if st.button("🏁 Judge the battle", use_container_width=True, type="primary"):
-            send_user_message(
+            queue_user_message(
                 "Battle is over. Based on everything said, declare ONE winner. "
-                "Briefly explain (2-3 sentences) why their roasts hit harder, then announce the winner with one final mic-drop line.",
-                selected_model, ss.spice,
+                "Briefly explain (2-3 sentences) why their roasts hit harder, then announce the winner with one final mic-drop line."
             )
             st.rerun()
     st.caption(f"Round: {b['round']}")
@@ -753,10 +811,10 @@ else:
     for idx, (label, prompt_text) in enumerate(TOPICS):
         with cols[idx % 3]:
             if st.button(label, key=f"topic_{idx}", use_container_width=True):
-                send_user_message(prompt_text, selected_model, ss.spice)
+                queue_user_message(prompt_text)
                 st.rerun()
 
 
 if user_input := st.chat_input("Roast Baba back, or say anything..."):
-    send_user_message(user_input, selected_model, ss.spice)
+    queue_user_message(user_input)
     st.rerun()
