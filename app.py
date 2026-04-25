@@ -144,40 +144,49 @@ header[data-testid="stHeader"] { background: transparent; z-index: 999; }
 [data-testid="stSidebarCollapseButton"], [data-testid="collapsedControl"] { display: none !important; }
 
 .stApp {
-    background:
-        /* Spotlight cone from top-center */
-        radial-gradient(ellipse 55% 30% at 50% 4%, rgba(255, 225, 130, 0.65) 0%, rgba(255, 180, 80, 0.25) 25%, transparent 55%),
-        /* Stage curtain → stage floor → audience white */
-        linear-gradient(180deg,
-            #2a0008 0%,
-            #4a0010 6%,
-            #6e0020 12%,
-            #4a0010 20%,
-            #1c0008 27%,
-            #5a2a1a 30%,
-            #fff5ef 38%,
-            #ffffff 100%);
+    background: linear-gradient(180deg, #fff5ef 0%, #ffffff 60%);
 }
 
-/* Velvet curtain side bands at the top */
-.stApp::before, .stApp::after {
+/* The hero is now a self-contained dark "stage" so text colors stay consistent */
+.rb-stage {
+    position: relative;
+    margin: -1rem -1rem 16px -1rem;
+    padding: 28px 80px 26px 80px;
+    border-radius: 0 0 28px 28px;
+    text-align: center;
+    overflow: hidden;
+    background:
+        /* spotlight cone */
+        radial-gradient(ellipse 55% 75% at 50% -10%, rgba(255, 225, 130, 0.6) 0%, rgba(255, 180, 80, 0.15) 35%, transparent 70%),
+        /* curtain backdrop */
+        linear-gradient(180deg,
+            #2a0008 0%,
+            #4a0010 28%,
+            #6e0020 55%,
+            #4a0010 80%,
+            #1c0008 100%);
+    box-shadow: 0 8px 24px rgba(40, 0, 8, 0.35);
+    z-index: 1;
+}
+/* Vertical curtain folds on left/right of the stage */
+.rb-stage::before, .rb-stage::after {
     content: "";
-    position: fixed;
-    top: 0;
-    height: 30vh;
-    width: 70px;
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 60px;
     pointer-events: none;
-    z-index: 0;
     background:
         repeating-linear-gradient(90deg,
-            rgba(110, 0, 32, 0.95) 0px,
-            rgba(60, 0, 16, 0.95) 14px,
-            rgba(110, 0, 32, 0.95) 28px);
+            #6e0020 0px,
+            #3a000d 14px,
+            #6e0020 28px);
+    box-shadow: inset 0 0 18px rgba(0,0,0,0.55);
 }
-.stApp::before { left: 0; box-shadow: 6px 0 14px rgba(0,0,0,0.45); }
-.stApp::after  { right: 0; box-shadow: -6px 0 14px rgba(0,0,0,0.45); }
+.rb-stage::before { left: 0; border-right: 2px solid #2a0008; }
+.rb-stage::after  { right: 0; border-left: 2px solid #2a0008; }
 @media (max-width: 768px) {
-    .stApp::before, .stApp::after { width: 30px; height: 22vh; }
+    .rb-stage { padding: 18px 40px 18px 40px; margin: -1rem -0.6rem 12px -0.6rem; }
+    .rb-stage::before, .rb-stage::after { width: 28px; }
 }
 
 @keyframes shimmer { from { background-position: 0% center; } to { background-position: 200% center; } }
@@ -331,20 +340,22 @@ button[data-testid="stPopoverButton"]:hover {
 """
 
 HERO_HTML = """
-<div class="rb-hero">
-    <div class="rb-stage-icons">
-        <span class="rb-mic">🎤</span>
-        <span class="rb-flame">🔥</span>
-    </div>
-    <h1>Roast Baba</h1>
-    <div class="rb-marquee">★ OPEN MIC NIGHT ★ LIVE FROM THE COMEDY CELLAR ★ TONIGHT ONLY ★</div>
-    <div class="rb-tagline">savage roasts · 9 personas · 6 languages</div>
-    <div class="rb-pills">
-        <span class="rb-pill live">live</span>
-        <span class="rb-pill">R-Rated</span>
-        <span class="rb-pill">Hinglish</span>
-        <span class="rb-pill">Battle Mode</span>
-        <span class="rb-pill">Voice</span>
+<div class="rb-stage">
+    <div class="rb-hero">
+        <div class="rb-stage-icons">
+            <span class="rb-mic">🎤</span>
+            <span class="rb-flame">🔥</span>
+        </div>
+        <h1>Roast Baba</h1>
+        <div class="rb-marquee">★ OPEN MIC NIGHT ★ LIVE FROM THE COMEDY CELLAR ★ TONIGHT ONLY ★</div>
+        <div class="rb-tagline">savage roasts · 9 personas · 6 languages</div>
+        <div class="rb-pills">
+            <span class="rb-pill live">live</span>
+            <span class="rb-pill">R-Rated</span>
+            <span class="rb-pill">Hinglish</span>
+            <span class="rb-pill">Battle Mode</span>
+            <span class="rb-pill">Voice</span>
+        </div>
     </div>
 </div>
 """
