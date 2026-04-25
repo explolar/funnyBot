@@ -145,8 +145,39 @@ header[data-testid="stHeader"] { background: transparent; z-index: 999; }
 
 .stApp {
     background:
-        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255, 120, 60, 0.18) 0%, transparent 65%),
-        linear-gradient(180deg, #ffffff 0%, #fff8f3 100%);
+        /* Spotlight cone from top-center */
+        radial-gradient(ellipse 55% 30% at 50% 4%, rgba(255, 225, 130, 0.65) 0%, rgba(255, 180, 80, 0.25) 25%, transparent 55%),
+        /* Stage curtain → stage floor → audience white */
+        linear-gradient(180deg,
+            #2a0008 0%,
+            #4a0010 6%,
+            #6e0020 12%,
+            #4a0010 20%,
+            #1c0008 27%,
+            #5a2a1a 30%,
+            #fff5ef 38%,
+            #ffffff 100%);
+}
+
+/* Velvet curtain side bands at the top */
+.stApp::before, .stApp::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    height: 30vh;
+    width: 70px;
+    pointer-events: none;
+    z-index: 0;
+    background:
+        repeating-linear-gradient(90deg,
+            rgba(110, 0, 32, 0.95) 0px,
+            rgba(60, 0, 16, 0.95) 14px,
+            rgba(110, 0, 32, 0.95) 28px);
+}
+.stApp::before { left: 0; box-shadow: 6px 0 14px rgba(0,0,0,0.45); }
+.stApp::after  { right: 0; box-shadow: -6px 0 14px rgba(0,0,0,0.45); }
+@media (max-width: 768px) {
+    .stApp::before, .stApp::after { width: 30px; height: 22vh; }
 }
 
 @keyframes shimmer { from { background-position: 0% center; } to { background-position: 200% center; } }
@@ -162,13 +193,15 @@ header[data-testid="stHeader"] { background: transparent; z-index: 999; }
     100% { box-shadow: 0 0 0 0 rgba(255, 90, 40, 0); }
 }
 
-.rb-hero { text-align: center; padding: 24px 0 8px 0; }
-.rb-flame { font-size: 4rem; display: inline-block; animation: flicker 1.4s ease-in-out infinite; line-height: 1; }
+.rb-hero { text-align: center; padding: 18px 0 8px 0; position: relative; z-index: 1; }
+.rb-stage-icons { display: inline-flex; gap: 18px; align-items: flex-end; }
+.rb-flame { font-size: 3.6rem; display: inline-block; animation: flicker 1.4s ease-in-out infinite; line-height: 1; }
+.rb-mic    { font-size: 3.2rem; display: inline-block; line-height: 1; transform: rotate(-12deg); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.45)); }
 .rb-hero h1 {
     font-size: 4rem;
     font-weight: 900;
-    margin: -6px 0 0 0;
-    background: linear-gradient(90deg, #d62500, #ff5a00, #ff9500, #ff5a00, #d62500);
+    margin: 0;
+    background: linear-gradient(90deg, #ffaa00, #ff5a00, #ffd700, #ff5a00, #ffaa00);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
@@ -176,28 +209,40 @@ header[data-testid="stHeader"] { background: transparent; z-index: 999; }
     animation: shimmer 5s linear infinite;
     letter-spacing: -2px;
     line-height: 1;
+    text-shadow: 0 0 35px rgba(255, 180, 60, 0.35);
+}
+.rb-marquee {
+    color: #ffd700;
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    margin-top: 10px;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7), 0 0 20px rgba(255, 150, 50, 0.3);
 }
 .rb-tagline {
-    color: #8a4a32;
+    color: #ffe1c8;
     font-size: 0.78rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    margin-top: 8px;
+    margin-top: 6px;
     font-weight: 500;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.55);
 }
-.rb-pills { margin: 10px auto 0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; max-width: 720px; }
+.rb-pills { margin: 12px auto 0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; max-width: 720px; position: relative; z-index: 1; }
 .rb-pill {
-    background: rgba(255, 90, 40, 0.08);
-    border: 1px solid rgba(255, 90, 40, 0.40);
-    color: #c43d10;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 200, 120, 0.55);
+    color: #ffd9b0;
     padding: 4px 12px;
     border-radius: 999px;
     font-size: 0.72rem;
     letter-spacing: 0.04em;
     font-weight: 600;
+    backdrop-filter: blur(4px);
 }
 .rb-pill.live { animation: pulseRing 2.2s ease-out infinite; }
-.rb-pill.live::before { content: "● "; color: #1ea84a; }
+.rb-pill.live::before { content: "● "; color: #34d36a; }
 
 [data-testid="stChatMessage"] {
     border-radius: 18px;
@@ -287,8 +332,12 @@ button[data-testid="stPopoverButton"]:hover {
 
 HERO_HTML = """
 <div class="rb-hero">
-    <div class="rb-flame">🔥</div>
+    <div class="rb-stage-icons">
+        <span class="rb-mic">🎤</span>
+        <span class="rb-flame">🔥</span>
+    </div>
     <h1>Roast Baba</h1>
+    <div class="rb-marquee">★ OPEN MIC NIGHT ★ LIVE FROM THE COMEDY CELLAR ★ TONIGHT ONLY ★</div>
     <div class="rb-tagline">savage roasts · 9 personas · 6 languages</div>
     <div class="rb-pills">
         <span class="rb-pill live">live</span>
@@ -339,22 +388,108 @@ def render_card_png(name: str, roast: str) -> bytes:
     img = Image.new("RGB", (W, H), (255, 248, 243))
     d = ImageDraw.Draw(img)
     try:
-        title_font = ImageFont.truetype("arialbd.ttf", 64)
-        body_font = ImageFont.truetype("arial.ttf", 44)
+        title_font = ImageFont.truetype("arialbd.ttf", 96)
+        body_font = ImageFont.truetype("arial.ttf", 46)
         small_font = ImageFont.truetype("arial.ttf", 28)
+        marquee_font = ImageFont.truetype("arialbd.ttf", 26)
     except Exception:
-        title_font = body_font = small_font = ImageFont.load_default()
-    for y in range(H):
-        t = y / H
-        r = int(255 - t * 8)
-        g = int(248 - t * 35)
-        b = int(243 - t * 60)
-        d.line([(0, y), (W, y)], fill=(r, g, b))
-    d.text((60, 60), "🔥 ROASTED", font=title_font, fill=(214, 37, 0))
-    d.text((60, 150), f"by Roast Baba — victim: {name}", font=small_font, fill=(138, 74, 50))
-    wrapped = textwrap.fill(roast, width=32)
-    d.multiline_text((60, 260), wrapped, font=body_font, fill=(35, 20, 15), spacing=12)
-    d.text((60, H - 70), "groq.com · llama 3.3 · streamlit", font=small_font, fill=(180, 130, 110))
+        title_font = body_font = small_font = marquee_font = ImageFont.load_default()
+
+    curtain_h = int(H * 0.38)
+    floor_top = curtain_h
+    floor_h = H - curtain_h
+
+    # Stage curtain (red velvet vertical-fold pattern)
+    for y in range(curtain_h):
+        ty = y / curtain_h
+        # darken slightly toward bottom of curtain
+        base = 1.0 - ty * 0.35
+        for x in range(W):
+            # vertical fold pattern: brighter mid-fold, darker at fold edges
+            fold = 0.85 + 0.15 * abs(((x % 56) - 28) / 28.0)
+            r = int(110 * base * fold)
+            g = int(0 * base * fold)
+            b = int(28 * base * fold)
+            img.putpixel((x, y), (r, g, b))
+
+    # Spotlight glow on curtain (additive bright cone from top)
+    cx, cy = W // 2, -60
+    max_r = int(W * 0.55)
+    for ry in range(0, curtain_h):
+        for rx in range(W):
+            dx = rx - cx
+            dy = ry - cy
+            dist = (dx * dx + dy * dy) ** 0.5
+            if dist > max_r:
+                continue
+            t = 1.0 - dist / max_r
+            falloff = t * t
+            cur = img.getpixel((rx, ry))
+            r = min(255, int(cur[0] + 200 * falloff))
+            g = min(255, int(cur[1] + 170 * falloff))
+            b = min(255, int(cur[2] + 70 * falloff))
+            img.putpixel((rx, ry), (r, g, b))
+
+    # Stage floor: dark warm fade into cream
+    for y in range(floor_h):
+        ty = y / floor_h
+        # quick non-linear fade
+        ease = ty ** 0.9
+        r = int(40 + (255 - 40) * ease)
+        g = int(20 + (245 - 20) * ease)
+        b = int(20 + (235 - 20) * ease)
+        d.line([(0, floor_top + y), (W, floor_top + y)], fill=(r, g, b))
+
+    # Curtain side pelmets (deeper red strips on left/right)
+    pelmet_w = 80
+    for x in range(pelmet_w):
+        alpha = 1.0 - (x / pelmet_w) * 0.5
+        col = (int(70 * alpha), 0, int(20 * alpha))
+        d.line([(x, 0), (x, curtain_h)], fill=col)
+        d.line([(W - x - 1, 0), (W - x - 1, curtain_h)], fill=col)
+
+    # Marquee strip across the bottom of the curtain
+    marquee_y = curtain_h - 60
+    d.rectangle([(0, marquee_y), (W, marquee_y + 50)], fill=(20, 5, 10))
+    marquee_text = "★ LIVE TONIGHT ★ ROAST BABA ★ NO MERCY ★"
+    bbox = d.textbbox((0, 0), marquee_text, font=marquee_font)
+    tw = bbox[2] - bbox[0]
+    d.text(((W - tw) // 2, marquee_y + 12), marquee_text, font=marquee_font, fill=(255, 215, 0))
+
+    # Title centered on curtain
+    title_text = "🔥  ROASTED  🔥"
+    bbox = d.textbbox((0, 0), title_text, font=title_font)
+    tw = bbox[2] - bbox[0]
+    d.text(((W - tw) // 2, 110), title_text, font=title_font, fill=(255, 220, 120))
+
+    # Victim line
+    sub = f"by Roast Baba — victim: {name}"
+    bbox = d.textbbox((0, 0), sub, font=small_font)
+    tw = bbox[2] - bbox[0]
+    d.text(((W - tw) // 2, 230), sub, font=small_font, fill=(255, 200, 160))
+
+    # Microphone icon on the stage floor (drawn with shapes)
+    mic_x, mic_y = 80, floor_top + 60
+    # mic head
+    d.rounded_rectangle([(mic_x, mic_y), (mic_x + 60, mic_y + 110)], radius=30, fill=(35, 35, 40), outline=(180, 180, 180), width=2)
+    # grill lines
+    for i in range(4):
+        d.line([(mic_x + 12, mic_y + 25 + i * 18), (mic_x + 48, mic_y + 25 + i * 18)], fill=(120, 120, 130), width=2)
+    # arc support
+    d.arc([(mic_x - 20, mic_y + 60), (mic_x + 80, mic_y + 160)], start=0, end=180, fill=(180, 180, 180), width=4)
+    # pole
+    d.line([(mic_x + 30, mic_y + 110), (mic_x + 30, mic_y + 200)], fill=(180, 180, 180), width=4)
+    # base
+    d.ellipse([(mic_x + 5, mic_y + 198), (mic_x + 55, mic_y + 212)], fill=(80, 80, 90))
+
+    # Roast text on stage floor, indented past mic
+    wrapped = textwrap.fill(roast, width=28)
+    d.multiline_text((180, floor_top + 50), wrapped, font=body_font, fill=(30, 18, 14), spacing=14)
+
+    # Footer
+    footer = "🎤 groq · llama 3.3 · streamlit"
+    d.text((80, H - 70), footer, font=small_font, fill=(160, 110, 90))
+
     out = io.BytesIO()
     img.save(out, format="PNG")
     return out.getvalue()
